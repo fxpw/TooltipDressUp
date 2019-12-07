@@ -46,7 +46,7 @@ end
 
 local function Tooltip_onTooltipSetItem(self)
     local _,itemLink = self:GetItem()
-    if not itemLink or shoppingTooltipsVisibilityCheck() then
+    if not itemLink or not IsDressableItem(itemLink) or shoppingTooltipsVisibilityCheck() then
         DressUpModel:Hide()
         return
     end

@@ -19,6 +19,21 @@ function DressUpModel:UpdateAnchor()
     end
 end
 
+function DressUpModel:OnUpdate()
+    if not GameTooltip:IsShown() then
+        self:Hide()
+        return
+    end
+end
+
+function DressUpModel:PLAYER_LOGIN()
+    self:SetUnit("player")
+end
+
+function DressUpModel:OnEvent(event,...)
+    self[event](self,...)
+end
+
 local function shoppingTooltipsVisibilityCheck()
     for _,tooltip in pairs(GameTooltip.shoppingTooltips) do
         if tooltip:IsShown() then
@@ -37,12 +52,6 @@ local function GameTooltip_ShowCompareItem_hk(self)
     end
 end
 
-local function DressUpModel_onUpdate(self)
-    if not GameTooltip:IsShown() then
-        self:Hide()
-        return
-    end
-end
 
 local function Tooltip_onTooltipSetItem(self)
     local _,itemLink = self:GetItem()
@@ -63,7 +72,6 @@ end
 
 
 DressUpModel:SetRotation(0.61)
-DressUpModel:SetUnit("player")
 DressUpModel:SetSize(120,240)
 DressUpModel:SetScale(SCALE)
 DressUpModel:SetFrameStrata(GameTooltip:GetFrameStrata())
@@ -82,6 +90,8 @@ DressUpModel:SetBackdrop({
 })
 DressUpModel:SetBackdropColor(0,0,0,1)
 
-DressUpModel:SetScript("OnUpdate",DressUpModel_onUpdate)
+DressUpModel:RegisterEvent("PLAYER_LOGIN")
+DressUpModel:SetScript("OnEvent",DressUpModel.OnEvent)
+DressUpModel:SetScript("OnUpdate",DressUpModel.OnUpdate)
 GameTooltip:HookScript("OnTooltipSetItem",Tooltip_onTooltipSetItem)  
 hooksecurefunc("GameTooltip_ShowCompareItem",GameTooltip_ShowCompareItem_hk)
